@@ -1,0 +1,89 @@
+---
+title: "ST558 HW5 Quarto Doc"
+author: "Liam Flaherty"
+format: html
+editor: visual
+---
+#ST558 HW4: Liam Flaherty
+
+## Task 1: Conceptual Questions
+
+### Task 1, Question 1
+1. What is the purpose of using cross-validation when fitting a random forest model?
+
+> check 
+
+
+### Task 1, Question 2
+2.Describe the bagged tree algorithm.
+
+> Its
+
+
+### Task 1, Question 3
+
+3. What is meant by a general linear model?
+
+> a model that's general
+
+
+### Task 1, Question 4
+
+4. When fitting a multiple linear regression model, what does adding an interaction term do? That is, what does it allow the model to differently as compared to when it is not included in the model?
+
+> Think 503
+
+
+### Task 1, Question 5
+
+5. Why do we split our data into a training and test set?
+
+> Prevent overfitting
+
+
+
+##Task 2: Fitting Models
+
+We are given some data on heart disease from  <https://www4.stat.ncsu.edu/~online/datasets/heart.csv>. We first download the data locally, then store it as an R object as usual.
+
+```{r}
+library(tidyverse)
+
+heart=read_csv("heart.csv")
+heart                             #get a glimpse of the data#
+
+str(as.data.frame(heart))         #normal summaries#
+summary(heart)                    #normal summaries#
+
+```
+
+
+### Task 2, EDA Part 1
+
+
+
+
+### Task 2, EDA Part 2
+
+We would like to make some minor alterations to our dataset. First, we transform the binary response (the presence of heart disease) from numeric to factor using `tivdyverse`'s `mutate()`. Next, we remove the `ST_Slope` and old numeric heart disease variables from our tibble.
+
+```{r}
+heart=heart|>
+  mutate(HeartDisease=as.factor(HeartDisease)) |>
+  select(-ST_Slope)
+```
+
+
+### Task 2, EDA Part 3
+
+
+### Task 2, Split Data
+
+
+### Task 2, kNN
+
+
+### Task 2, Logistic Regression
+
+
+### Task 2, Tree Models

@@ -11,38 +11,38 @@ editor: visual
 ### Task 1, Question 1
 1. What is the purpose of using cross-validation when fitting a random forest model?
 
-> check 
+> In general, using cross-validation allows us to prevent overfitting when we don't have sufficient data to split into training and test data.
 
 
 ### Task 1, Question 2
-2.Describe the bagged tree algorithm.
+2. Describe the bagged tree algorithm.
 
-> Its
+> The bagged tree algorithm essentially samples with replacement from itself, then builds trees on each sample subset.
 
 
 ### Task 1, Question 3
 
 3. What is meant by a general linear model?
 
-> a model that's general
+> A general linear model is one that has a continuous response variable and (potentially) continuous and categorical predictors. This stands in contrast to *generalized* linear models, which allow for responses that are non-normal.
 
 
 ### Task 1, Question 4
 
 4. When fitting a multiple linear regression model, what does adding an interaction term do? That is, what does it allow the model to differently as compared to when it is not included in the model?
 
-> Think 503
+> The interaction term in the model is used when the two variables have different effects when considered together. For example, may asprin has an effect on heart rate, and alchohol has an effect on heart rate, but the precence of both alchohol and asprin generate different effects.
 
 
 ### Task 1, Question 5
 
 5. Why do we split our data into a training and test set?
 
-> Prevent overfitting
+> We split the data into training and tests sets to evaluate our models and prevent overfitting. Whenever we add terms, our correlation can only improve. But more complicated models may suffer from overfitting. When comparing models, we generally select the model which does "best" (by way of a measurment such as MSE) on the *test* data.
 
 
 
-##Task 2: Fitting Models
+## Task 2: Fitting Models
 
 We are given some data on heart disease from  <https://www4.stat.ncsu.edu/~online/datasets/heart.csv>. We first download the data locally, then store it as an R object as usual.
 

@@ -209,18 +209,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>heart<span class="ot">=</span><span class="fu">read_csv</span>(<span class="st">"heart.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Rows: 918 Columns: 12
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr (5): Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope
-dbl (7): Age, RestingBP, Cholesterol, FastingBS, MaxHR, Oldpeak, HeartDisease
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>heart                             <span class="co">#get a glimpse of the data#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>heart<span class="ot">=</span><span class="fu">read_csv</span>(<span class="st">"heart.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>heart                             <span class="co">#get a glimpse of the data#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 918 × 12
      Age Sex   ChestPainType RestingBP Cholesterol FastingBS RestingECG MaxHR
@@ -239,23 +229,16 @@ dbl (7): Age, RestingBP, Cholesterol, FastingBS, MaxHR, Oldpeak, HeartDisease
 # ℹ 4 more variables: ExerciseAngina &lt;chr&gt;, Oldpeak &lt;dbl&gt;, ST_Slope &lt;chr&gt;,
 #   HeartDisease &lt;dbl&gt;</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(<span class="fu">as.data.frame</span>(heart))         <span class="co">#normal summaries#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   918 obs. of  12 variables:
- $ Age           : num  40 49 37 48 54 39 45 54 37 48 ...
- $ Sex           : chr  "M" "F" "M" "F" ...
- $ ChestPainType : chr  "ATA" "NAP" "ATA" "ASY" ...
- $ RestingBP     : num  140 160 130 138 150 120 130 110 140 120 ...
- $ Cholesterol   : num  289 180 283 214 195 339 237 208 207 284 ...
- $ FastingBS     : num  0 0 0 0 0 0 0 0 0 0 ...
- $ RestingECG    : chr  "Normal" "Normal" "ST" "Normal" ...
- $ MaxHR         : num  172 156 98 108 122 170 170 142 130 120 ...
- $ ExerciseAngina: chr  "N" "N" "N" "Y" ...
- $ Oldpeak       : num  0 1 0 1.5 0 0 0 0 1.5 0 ...
- $ ST_Slope      : chr  "Up" "Flat" "Up" "Flat" ...
- $ HeartDisease  : num  0 1 0 1 0 0 0 0 1 0 ...</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(heart)                    <span class="co">#normal summaries#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="task-2-eda-part-1" class="level3">
+<h3 class="anchored" data-anchor-id="task-2-eda-part-1">Task 2, EDA Part 1</h3>
+<p>We want to get a quick glimpse of our data. We can see that there are no missing values, but there are some irregularities. For example, in our summary, we see that certain people have a cholesterol of zero, a resting bloop pressure of zero, and a max heart rate of just 60bpm (while 60 would be a fine <em>resting</em> heart rate, a <em>maximum</em> heart rate that low suggests death).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(heart))                 <span class="co">#no missing values#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(heart)                    <span class="co">#normal summaries#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>      Age            Sex            ChestPainType        RestingBP    
  Min.   :28.00   Length:918         Length:918         Min.   :  0.0  
@@ -280,26 +263,183 @@ dbl (7): Age, RestingBP, Cholesterol, FastingBS, MaxHR, Oldpeak, HeartDisease
                     Max.   : 6.2000                      Max.   :1.0000  </code></pre>
 </div>
 </div>
-<section id="task-2-eda-part-1" class="level3">
-<h3 class="anchored" data-anchor-id="task-2-eda-part-1">Task 2, EDA Part 1</h3>
+<p>There are a couple choices when dealing with such implausible data. One is to insert “dummy data”, taking the average of all other values of the same predictor (essentially trading off information on the covariance among the predictors in an effort to preserve other variables for the observation which might be useful). A simpler way would be to delete the observations entirely. We should be careful though. While a maximum heart rate below 100 seems implausible, we should keep in mind that the data is based around heart failure. Indeed, when we check the data, we see that nearly 8% of our observations have a max heart rates under 100– probably too much to be errors. Similarly, we see over 20% of our data have a cholesterol of zero. Since the data has been collected from multiple sources, it might be the case that certain sources have not included cholesterol in their measurements. It seems extreme to drop the observations entirely, as the other variables for the subject might be legitimate. For now, we will leave the dataset alone, and tend to the heart rate and cholesterol questions when we get a clearer sense of what our model might look like.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(heart<span class="sc">$</span>MaxHR<span class="sc">&lt;</span><span class="dv">100</span>)                 <span class="co">#71#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 71</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(heart<span class="sc">$</span>Cholesterol<span class="sc">==</span><span class="dv">0</span>)            <span class="co">#172#</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 172</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>heart[<span class="fu">which</span>(heart<span class="sc">$</span>RestingBP<span class="sc">==</span><span class="dv">0</span>),]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 12
+    Age Sex   ChestPainType RestingBP Cholesterol FastingBS RestingECG MaxHR
+  &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+1    55 M     NAP                   0           0         0 Normal       155
+# ℹ 4 more variables: ExerciseAngina &lt;chr&gt;, Oldpeak &lt;dbl&gt;, ST_Slope &lt;chr&gt;,
+#   HeartDisease &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </section>
 <section id="task-2-eda-part-2" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-eda-part-2">Task 2, EDA Part 2</h3>
 <p>We would like to make some minor alterations to our dataset. First, we transform the binary response (the presence of heart disease) from numeric to factor using <code>tivdyverse</code>’s <code>mutate()</code>. Next, we remove the <code>ST_Slope</code> and old numeric heart disease variables from our tibble.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>heart<span class="ot">=</span>heart<span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HeartDisease=</span><span class="fu">as.factor</span>(HeartDisease)) <span class="sc">|&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ST_Slope)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>heart<span class="ot">=</span>heart<span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">HeartDisease=</span><span class="fu">as.factor</span>(HeartDisease)) <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>ST_Slope)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="task-2-eda-part-3" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-eda-part-3">Task 2, EDA Part 3</h3>
+<p>We are going to be performing a k-Nearest Neighbors analysis to predict whether or not someone has heart disease. In general, we want all numeric predictors for such an analysis. Luckily, the <code>caret</code> package offers a way to transform our data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'caret' was built under R version 4.4.1</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: lattice</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'caret'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:purrr':
+
+    lift</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>dummies<span class="ot">=</span><span class="fu">dummyVars</span>(<span class="sc">~</span> Sex <span class="sc">+</span> ChestPainType <span class="sc">+</span> RestingECG <span class="sc">+</span> ExerciseAngina,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data=</span>heart)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>dummydf<span class="ot">=</span><span class="fu">predict</span>(dummies, <span class="at">newdata=</span>heart)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>heart<span class="ot">=</span><span class="fu">as_tibble</span>(<span class="fu">cbind</span>(heart,dummydf))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>heart</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 918 × 22
+     Age Sex   ChestPainType RestingBP Cholesterol FastingBS RestingECG MaxHR
+   &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;chr&gt;      &lt;dbl&gt;
+ 1    40 M     ATA                 140         289         0 Normal       172
+ 2    49 F     NAP                 160         180         0 Normal       156
+ 3    37 M     ATA                 130         283         0 ST            98
+ 4    48 F     ASY                 138         214         0 Normal       108
+ 5    54 M     NAP                 150         195         0 Normal       122
+ 6    39 M     NAP                 120         339         0 Normal       170
+ 7    45 F     ATA                 130         237         0 Normal       170
+ 8    54 M     ATA                 110         208         0 Normal       142
+ 9    37 M     ASY                 140         207         0 Normal       130
+10    48 F     ATA                 120         284         0 Normal       120
+# ℹ 908 more rows
+# ℹ 14 more variables: ExerciseAngina &lt;chr&gt;, Oldpeak &lt;dbl&gt;, HeartDisease &lt;fct&gt;,
+#   SexF &lt;dbl&gt;, SexM &lt;dbl&gt;, ChestPainTypeASY &lt;dbl&gt;, ChestPainTypeATA &lt;dbl&gt;,
+#   ChestPainTypeNAP &lt;dbl&gt;, ChestPainTypeTA &lt;dbl&gt;, RestingECGLVH &lt;dbl&gt;,
+#   RestingECGNormal &lt;dbl&gt;, RestingECGST &lt;dbl&gt;, ExerciseAnginaN &lt;dbl&gt;,
+#   ExerciseAnginaY &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </section>
 <section id="task-2-split-data" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-split-data">Task 2, Split Data</h3>
+<p>We’d now like to split our data into a training and test set. We can do this with normal <code>BaseR</code> functions, <code>sample()</code>ing without replacement 80% of the rows of our full tibble for our training set, and then putting the remaining rows in our test set with <code>setdiff()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">558</span>)   <span class="co">#to make reproducible#</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>training<span class="ot">=</span><span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(heart), <span class="at">size=</span><span class="fu">nrow</span>(heart)<span class="sc">*</span>.<span class="dv">8</span>, <span class="at">replace=</span><span class="cn">FALSE</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>test<span class="ot">=</span><span class="fu">setdiff</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(heart), training)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>heart_training<span class="ot">=</span>heart[training,] <span class="sc">|&gt;</span> <span class="fu">select_if</span>(<span class="cf">function</span>(x) <span class="sc">!</span><span class="fu">is.character</span>(x))</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>heart_test<span class="ot">=</span>heart[test,] <span class="sc">|&gt;</span> <span class="fu">select_if</span>(<span class="cf">function</span>(x) <span class="sc">!</span><span class="fu">is.character</span>(x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 <section id="task-2-knn" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-knn">Task 2, kNN</h3>
+<p>We now run our K-nn algorithm.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>myknn<span class="ot">=</span><span class="fu">train</span>(HeartDisease <span class="sc">~</span>.,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>            <span class="at">data=</span>heart_training,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">method=</span><span class="st">"knn"</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">trControl=</span><span class="fu">trainControl</span>(<span class="at">method=</span><span class="st">"repeatedcv"</span>, <span class="at">number=</span><span class="dv">10</span>, <span class="at">repeats=</span><span class="dv">3</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">preProcess=</span><span class="fu">c</span>(<span class="st">"center"</span>, <span class="st">"scale"</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">tuneGrid=</span><span class="fu">data.frame</span>(<span class="at">k=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">40</span>)</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>myknn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>k-Nearest Neighbors 
+
+734 samples
+ 17 predictor
+  2 classes: '0', '1' 
+
+Pre-processing: centered (17), scaled (17) 
+Resampling: Cross-Validated (10 fold, repeated 3 times) 
+Summary of sample sizes: 661, 660, 660, 662, 661, 660, ... 
+Resampling results across tuning parameters:
+
+  k   Accuracy   Kappa    
+   1  0.7671332  0.5330004
+   2  0.7652699  0.5288929
+   3  0.7970801  0.5937635
+   4  0.8034797  0.6059701
+   5  0.8206403  0.6393574
+   6  0.8092920  0.6174906
+   7  0.8165112  0.6314335
+   8  0.8156041  0.6292951
+   9  0.8164989  0.6312129
+  10  0.8069964  0.6119828
+  11  0.8142154  0.6266282
+  12  0.8083224  0.6147446
+  13  0.8069462  0.6121794
+  14  0.8110499  0.6207160
+  15  0.8142029  0.6270861
+  16  0.8151100  0.6289900
+  17  0.8196515  0.6380220
+  18  0.8196827  0.6380709
+  19  0.8224041  0.6435861
+  20  0.8219723  0.6429193
+  21  0.8210839  0.6409391
+  22  0.8205781  0.6401042
+  23  0.8205839  0.6400217
+  24  0.8165110  0.6320088
+  25  0.8169431  0.6327699
+  26  0.8129016  0.6250645
+  27  0.8142404  0.6271753
+  28  0.8106247  0.6198193
+  29  0.8115501  0.6217575
+  30  0.8060891  0.6102696
+  31  0.8042563  0.6067162
+  32  0.8061265  0.6106504
+  33  0.8034051  0.6049348
+  34  0.8043120  0.6065031
+  35  0.8088537  0.6153281
+  36  0.8097546  0.6172516
+  37  0.8115628  0.6206786
+  38  0.8129328  0.6230822
+  39  0.8097234  0.6165540
+  40  0.8124698  0.6219957
+
+Accuracy was used to select the optimal model using the largest value.
+The final value used for the model was k = 19.</code></pre>
+</div>
+</div>
+<p>We can check the accuracy of our knn against our test set. We use the <code>confusionMatrix()</code> function from the <code>caret</code> library to see that our overall accuracy is about 82%, with balanced accuracy for both people who actually have heart disease and actually don’t have heart disease (about 45.8% of the data in our test set actually did not have heart disease, which we correctly predicted about 82.7% of the time, while the remaining 54.2% of our test set actually did have heart disease, which we correctly predicted about 81.5% if the time).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">confusionMatrix</span>(myknn, <span class="at">newdata=</span>heart_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Cross-Validated (10 fold, repeated 3 times) Confusion Matrix 
+
+(entries are percentual average cell counts across resamples)
+ 
+          Reference
+Prediction    0    1
+         0 38.0  9.9
+         1  7.8 44.3
+                            
+ Accuracy (average) : 0.8224</code></pre>
+</div>
+</div>
 </section>
 <section id="task-2-logistic-regression" class="level3">
 <h3 class="anchored" data-anchor-id="task-2-logistic-regression">Task 2, Logistic Regression</h3>

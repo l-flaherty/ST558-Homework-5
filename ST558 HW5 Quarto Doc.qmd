@@ -49,18 +49,27 @@ We are given some data on heart disease from  <https://www4.stat.ncsu.edu/~onlin
 ```{r}
 library(tidyverse)
 
-heart=read_csv("heart.csv")
+heart=read_csv("heart.csv", show_col_types = FALSE)
 heart                             #get a glimpse of the data#
-
-str(as.data.frame(heart))         #normal summaries#
-summary(heart)                    #normal summaries#
-
 ```
 
 
 ### Task 2, EDA Part 1
 
+We want to get a quick glimpse of our data. We can see that there are no missing values, but there are some irregularities. For example, in our summary, we see that certain people have a cholesterol of zero, a resting bloop pressure of zero, and a max heart rate of just 60bpm (while 60 would be a fine *resting* heart rate, a *maximum* heart rate that low suggests death).
 
+```{r}
+sum(is.na(heart))                 #no missing values#
+summary(heart)                    #normal summaries#
+```
+There are a couple choices when dealing with such implausible data. One is to insert "dummy data", taking the average of all other values of the same predictor (essentially trading off information on the covariance among the predictors in an effort to preserve other variables for the observation which might be useful). A simpler way would be to delete the observations entirely. We should be careful though. While a maximum heart rate below 100 seems implausible, we should keep in mind that the data is based around heart failure. Indeed, when we check the data, we see that nearly 8% of our observations have a max heart rates under 100-- probably too much to be errors. Similarly, we see over 20% of our data have a cholesterol of zero. Since the data has been collected from multiple sources, it might be the case that certain sources have not included cholesterol in their measurements. It seems extreme to drop the observations entirely, as the other variables for the subject might be legitimate. For now, we will leave the dataset alone, and tend to the heart rate and cholesterol questions when we get a clearer sense of what our model might look like.
+
+```{r}
+sum(heart$MaxHR<100)                 #71#
+sum(heart$Cholesterol==0)            #172#
+heart[which(heart$RestingBP==0),]
+
+```
 
 
 ### Task 2, EDA Part 2
@@ -76,12 +85,54 @@ heart=heart|>
 
 ### Task 2, EDA Part 3
 
+We are going to be performing a k-Nearest Neighbors analysis to predict whether or not someone has heart disease. In general, we want all numeric predictors for such an analysis. Luckily, the `caret` package offers a way to transform our data.
+
+```{r}
+library(caret)
+
+dummies=dummyVars(~ Sex + ChestPainType + RestingECG + ExerciseAngina,
+                 data=heart)
+dummydf=predict(dummies, newdata=heart)
+heart=as_tibble(cbind(heart,dummydf))
+
+heart
+```
+
+
 
 ### Task 2, Split Data
 
+We'd now like to split our data into a training and test set. We can do this with normal `BaseR` functions, `sample()`ing without replacement 80% of the rows of our full tibble for our training set, and then putting the remaining rows in our test set with `setdiff()`.  
+
+```{r}
+set.seed(558)   #to make reproducible#
+training=sample(1:nrow(heart), size=nrow(heart)*.8, replace=FALSE)
+test=setdiff(1:nrow(heart), training)
+
+heart_training=heart[training,] |> select_if(function(x) !is.character(x))
+heart_test=heart[test,] |> select_if(function(x) !is.character(x))
+```
 
 ### Task 2, kNN
 
+We now run our K-nn algorithm.
+
+```{r}
+myknn=train(HeartDisease ~.,
+            data=heart_training,
+            method="knn",
+            trControl=trainControl(method="repeatedcv", number=10, repeats=3),
+            preProcess=c("center", "scale"),
+            tuneGrid=data.frame(k=1:40)
+            )
+myknn
+```
+
+We can check the accuracy of our knn against our test set. We use the `confusionMatrix()` function from the `caret` library to see that our overall accuracy is about 82%, with balanced accuracy for both people who actually have heart disease and actually don't have heart disease (about 45.8% of the data in our test set actually did not have heart disease, which we correctly predicted about 82.7% of the time, while the remaining 54.2% of our test set actually did have heart disease, which we correctly predicted about 81.5% if the time).
+
+```{r}
+confusionMatrix(myknn, newdata=heart_test)
+```
 
 ### Task 2, Logistic Regression
 

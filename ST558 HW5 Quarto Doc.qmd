@@ -178,5 +178,68 @@ confusionMatrix(log_model_full, newdata=heart_test)
 
 ```
 
-
 ### Task 2, Tree Models
+
+Another type of analysis that might be of interest are classification trees. We will first try a single tree, then use ensemble methods like random forests and boosted trees. We elect to do a model with our full parameter set.
+
+```{r}
+mytree=train(HeartDisease~., 
+             data=heart_training,
+             method="rpart",
+             preProcess=c("center", "scale"),
+             trControl=trainControl(method="repeatedcv", number=10, repeats=3),
+             tuneGrid=data.frame(cp=seq(from=0, to=0.1, by=0.001))
+             )
+mytree
+```
+We see the accuracy is slightly worse than our $k$-nn and logistic regression models.
+
+
+```{r}
+confusionMatrix(mytree, newdata=heart_test)
+```
+
+Maybe a random forest will perform better. The only alteration we need from the above is changing our `method` argument from `rpart` to `rf`, and our `tuneGrid` argument to `mtry`, ranging from 1 to our number of parameters.
+
+```{r}
+library(randomForest)
+
+myrandomforest=train(HeartDisease~., 
+             data=heart_training,
+             method="rf",
+             preProcess=c("center", "scale"),
+             trControl=trainControl(method="repeatedcv", number=10, repeats=3),
+             tuneGrid=data.frame(mtry=1:(ncol(heart_training)-1))
+             )
+myrandomforest
+
+```
+The accuracy with our random forest improves to about the level of our logistic regression and our $k$-nn algorithm.
+
+```{r}
+confusionMatrix(myrandomforest, newdata=heart_test)
+```
+
+Maybe boosting our results will improve it even further. To do so we change our method to `gbm` and tweak the parameters to our `tuneGrid` in line with the instructions given.
+
+```{r}
+library(gbm)
+
+myboosted=train(HeartDisease~., 
+             data=heart_training,
+             method="gbm",
+             preProcess=c("center", "scale"),
+             trControl=trainControl(method="repeatedcv", number=10, repeats=3),
+             tuneGrid=expand.grid(n.trees=c(25,50,100,200),
+                                  interaction.depth=1:3,
+                                  shrinkage=0.1,
+                                  n.minobsinnode=10),
+             verbose=FALSE
+             )
+myboosted
+```
+Indeed, we see it does offer a slight improvement; it is our best model!
+
+```{r}
+confusionMatrix(myboosted, newdata=heart_test)
+```

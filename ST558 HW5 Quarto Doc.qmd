@@ -4,47 +4,44 @@ author: "Liam Flaherty"
 format: html
 editor: visual
 ---
+
 #ST558 HW4: Liam Flaherty
 
 ## Task 1: Conceptual Questions
 
 ### Task 1, Question 1
-1. What is the purpose of using cross-validation when fitting a random forest model?
+
+1.  What is the purpose of using cross-validation when fitting a random forest model?
 
 > In general, using cross-validation allows us to prevent overfitting when we don't have sufficient data to split into training and test data.
 
-
 ### Task 1, Question 2
-2. Describe the bagged tree algorithm.
+
+2.  Describe the bagged tree algorithm.
 
 > The bagged tree algorithm essentially samples with replacement from itself, then builds trees on each sample subset.
 
-
 ### Task 1, Question 3
 
-3. What is meant by a general linear model?
+3.  What is meant by a general linear model?
 
 > A general linear model is one that has a continuous response variable and (potentially) continuous and categorical predictors. This stands in contrast to *generalized* linear models, which allow for responses that are non-normal.
 
-
 ### Task 1, Question 4
 
-4. When fitting a multiple linear regression model, what does adding an interaction term do? That is, what does it allow the model to differently as compared to when it is not included in the model?
+4.  When fitting a multiple linear regression model, what does adding an interaction term do? That is, what does it allow the model to differently as compared to when it is not included in the model?
 
 > The interaction term in the model is used when the two variables have different effects when considered together. For example, may asprin has an effect on heart rate, and alchohol has an effect on heart rate, but the precence of both alchohol and asprin generate different effects.
 
-
 ### Task 1, Question 5
 
-5. Why do we split our data into a training and test set?
+5.  Why do we split our data into a training and test set?
 
 > We split the data into training and tests sets to evaluate our models and prevent overfitting. Whenever we add terms, our correlation can only improve. But more complicated models may suffer from overfitting. When comparing models, we generally select the model which does "best" (by way of a measurment such as MSE) on the *test* data.
 
-
-
 ## Task 2: Fitting Models
 
-We are given some data on heart disease from  <https://www4.stat.ncsu.edu/~online/datasets/heart.csv>. We first download the data locally, then store it as an R object as usual.
+We are given some data on heart disease from <https://www4.stat.ncsu.edu/~online/datasets/heart.csv>. We first download the data locally, then store it as an R object as usual.
 
 ```{r}
 library(tidyverse)
@@ -52,7 +49,6 @@ library(tidyverse)
 heart=read_csv("heart.csv", show_col_types = FALSE)
 heart                             #get a glimpse of the data#
 ```
-
 
 ### Task 2, EDA Part 1
 
@@ -62,6 +58,7 @@ We want to get a quick glimpse of our data. We can see that there are no missing
 sum(is.na(heart))                 #no missing values#
 summary(heart)                    #normal summaries#
 ```
+
 There are a couple choices when dealing with such implausible data. One is to insert "dummy data", taking the average of all other values of the same predictor (essentially trading off information on the covariance among the predictors in an effort to preserve other variables for the observation which might be useful). A simpler way would be to delete the observations entirely. We should be careful though. While a maximum heart rate below 100 seems implausible, we should keep in mind that the data is based around heart failure. Indeed, when we check the data, we see that nearly 8% of our observations have a max heart rates under 100-- probably too much to be errors. Similarly, we see over 20% of our data have a cholesterol of zero. Since the data has been collected from multiple sources, it might be the case that certain sources have not included cholesterol in their measurements. It seems extreme to drop the observations entirely, as the other variables for the subject might be legitimate. For now, we will leave the dataset alone, and tend to the heart rate and cholesterol questions when we get a clearer sense of what our model might look like.
 
 ```{r}
@@ -70,7 +67,6 @@ sum(heart$Cholesterol==0)            #172#
 heart[which(heart$RestingBP==0),]
 
 ```
-
 
 ### Task 2, EDA Part 2
 
@@ -81,7 +77,6 @@ heart=heart|>
   mutate(HeartDisease=as.factor(HeartDisease)) |>
   select(-ST_Slope)
 ```
-
 
 ### Task 2, EDA Part 3
 
@@ -98,11 +93,9 @@ heart=as_tibble(cbind(heart,dummydf))
 heart
 ```
 
-
-
 ### Task 2, Split Data
 
-We'd now like to split our data into a training and test set. We can do this with normal `BaseR` functions, `sample()`ing without replacement 80% of the rows of our full tibble for our training set, and then putting the remaining rows in our test set with `setdiff()`.  Note that in both our training and test sets, we only select the numeric columns using `select_if()` from the `tidyverse`.
+We'd now like to split our data into a training and test set. We can do this with normal `BaseR` functions, `sample()`ing without replacement 80% of the rows of our full tibble for our training set, and then putting the remaining rows in our test set with `setdiff()`. Note that in both our training and test sets, we only select the numeric columns using `select_if()` from the `tidyverse`.
 
 ```{r}
 set.seed(558)   #to make reproducible#
@@ -192,8 +185,8 @@ mytree=train(HeartDisease~.,
              )
 mytree
 ```
-We see the accuracy is slightly worse than our $k$-nn and logistic regression models.
 
+We see the accuracy is slightly worse than our $k$-nn and logistic regression models.
 
 ```{r}
 confusionMatrix(mytree, newdata=heart_test)
@@ -214,6 +207,7 @@ myrandomforest=train(HeartDisease~.,
 myrandomforest
 
 ```
+
 The accuracy with our random forest improves to about the level of our logistic regression and our $k$-nn algorithm.
 
 ```{r}
@@ -238,6 +232,7 @@ myboosted=train(HeartDisease~.,
              )
 myboosted
 ```
+
 Indeed, we see it does offer a slight improvement; it is our best model!
 
 ```{r}
